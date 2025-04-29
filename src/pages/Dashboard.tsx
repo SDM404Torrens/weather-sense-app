@@ -22,14 +22,11 @@ export default function Home() {
   return (
     <div className="p-6">
       <Header 
-        title="January 2022" 
         date="Thursday, Jan 4, 2022"
         weatherData={weatherData}
         onSearch={handleSearch}
       />
 
-
-      {/* Weather Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {weatherData.metrics.map((metric, index) => (
           <WeatherCard
@@ -42,7 +39,6 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Weekly Forecast Table */}
       <div className="bg-white rounded-lg shadow-sm p-6">
         <h3 className="text-lg font-semibold mb-4">Weekly Forecast</h3>
         <table className="w-full">

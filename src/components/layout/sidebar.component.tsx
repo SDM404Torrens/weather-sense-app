@@ -23,16 +23,14 @@ function SidebarItem({ icon, children, to }: {
 
 export default function Sidebar() {
   const handleLogout = () => {
-    // Add your logout logic here
     console.log('User logged out');
   };
 
   return (
     <div className="w-64 bg-blue-600 text-white p-6 flex flex-col h-screen">
-      {/* Top Content */}
       <div>
         <h1 className="text-2xl font-bold mb-8">
-          <NavLink to="/">WeatherApp</NavLink>
+          <NavLink to="/">WeatherSense</NavLink>
         </h1>
         <nav className="space-y-4">
           <SidebarItem icon={<FaRegSave />} to="/saved">Saved Locations</SidebarItem>
@@ -40,7 +38,6 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* Bottom-Aligned Content */}
       <div className="mt-auto space-y-4">
         <SidebarItem icon={<FaCog />} to="/settings">Settings</SidebarItem>
         <button
