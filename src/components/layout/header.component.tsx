@@ -1,4 +1,4 @@
-import { FaSearch, FaRegBell, FaRegUser } from 'react-icons/fa';
+import { FaSearch, FaRegBell } from 'react-icons/fa';
 import TemperatureToggle from '../../components/toggle/toggle.tempeture.component';
 import { convertTemp } from '../../utils/tempeture.utils';
 import {  useSelector } from 'react-redux';
