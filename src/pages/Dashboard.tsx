@@ -1,6 +1,7 @@
 import { FaWind, FaCloudRain, FaTachometerAlt, FaSun } from 'react-icons/fa';
 import WeatherCard from '../components/card/card.weather.component';
 import Header from '../components/layout/header.component';
+import WeatherChart from '../components/chart/weather.chart';
 
 export default function Home() {
 
@@ -14,6 +15,16 @@ export default function Home() {
       { icon: <FaSun />, title: 'UV Index', value: '2.3', change: '+0.3' },
     ],
   };
+
+  const weeklyWeather = [
+    { week: 'Week 1', temp: 22 },
+    { week: 'Week 2', temp: 24 },
+    { week: 'Week 3', temp: 19 },
+    { week: 'Week 4', temp: 21 },
+    { week: 'Week 5', temp: 28 },
+    { week: 'Week 6', temp: 30 },
+    { week: 'Week 7', temp: 25 },
+  ];
 
   const handleSearch = (query: string) => {
     console.log('Searching for:', query);
@@ -38,28 +49,12 @@ export default function Home() {
           />
         ))}
       </div>
-
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h3 className="text-lg font-semibold mb-4">Weekly Forecast</h3>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-left pb-2">Day</th>
-              <th className="text-left pb-2">Temp (°C)</th>
-              <th className="text-left pb-2">Conditions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day, i) => (
-              <tr key={day} className="border-b border-gray-100 last:border-0">
-                <td className="py-3">{day}</td>
-                <td className="py-3">{20 + i}</td>
-                <td className="py-3">Sunny</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <WeatherChart
+        title="Weekly Temperature"
+        description="4-week average"
+        changePercentage={5}
+        weeklyData={weeklyWeather}
+    />
     </div>
   );
 }

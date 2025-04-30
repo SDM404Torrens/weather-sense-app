@@ -13,8 +13,9 @@ interface HeaderProps {
   };
   onSearch?: (query: string) => void;
 }
-
-export default function Header({ date, weatherData, onSearch }: HeaderProps) {
+const Header: React.FC<HeaderProps> = ({ 
+  date, weatherData, onSearch
+}) => {
   const unit = useSelector((state: RootState) => selectUnit(state));
   return (
     <header className="bg-white rounded-lg shadow-sm p-6 mb-8">
@@ -46,3 +47,4 @@ export default function Header({ date, weatherData, onSearch }: HeaderProps) {
     </header>
   );
 }
+export default Header;
