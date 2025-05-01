@@ -1,32 +1,20 @@
-import { useSelector } from "react-redux";
-import LoginForm from "../form/login.form.component";
-import { selectIsAuthenticated } from "../../store/auth/auth.selectors";
-import { useEffect } from "react";
+import SignUpForm from "../form/sign-up.form.component";
 
-interface LoginModalProps {
+interface SignUpModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSignUpClick: () => void;
+  onLoginClick: () => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({
+const SignUpModal: React.FC<SignUpModalProps> = ({
   isOpen,
   onClose,
-  onSignUpClick,
+  onLoginClick,
 }) => {
   if (!isOpen) return null;
-
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      onClose();
-    }
-  }, [isAuthenticated, onClose]);
-
   return (
     <div
-      id="login-modal"
+      id="sign-up-modal"
       tabIndex={-1}
       aria-hidden={!isOpen}
       className="fixed inset-0 z-50 flex justify-center items-center w-full h-[calc(100%-1rem)] max-h-full overflow-y-auto overflow-x-hidden"
@@ -34,7 +22,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       <div className="relative p-4 w-full max-w-md max-h-full">
         <div className="relative bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-gray-200/50">
           <div className="flex items-center justify-between p-4 md:p-5 border-b border-gray-200/50 rounded-t">
-            <h3 className="text-xl font-semibold text-gray-800">Login</h3>
+            <h3 className="text-xl font-semibold text-gray-800">Sign Up</h3>
             <button
               type="button"
               onClick={onClose}
@@ -58,17 +46,17 @@ const LoginModal: React.FC<LoginModalProps> = ({
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          <LoginForm />
+          <SignUpForm onClose={onClose} />
           <div className="flex items-center p-4 md:p-5 border-t border-gray-200/50 rounded-b">
             <span className="text-sm font-medium text-gray-700 drop-shadow-sm">
-              Don't have an account?
+              Already have an account?
             </span>
             <button
               type="button"
-              onClick={onSignUpClick}
+              onClick={onLoginClick}
               className="text-sm font-medium text-blue-600 hover:text-blue-800 ml-2 transition-colors"
             >
-              Sign up
+              Log in
             </button>
           </div>
         </div>
@@ -77,4 +65,4 @@ const LoginModal: React.FC<LoginModalProps> = ({
   );
 };
 
-export default LoginModal;
+export default SignUpModal;

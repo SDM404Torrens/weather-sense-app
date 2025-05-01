@@ -4,6 +4,7 @@ import Dashboard from "../pages/Dashboard";
 import SavedLocations from "../pages/SavedLocations";
 import Calendar from "../pages/Calendar";
 import ProtectedRoute from "../components/protected/protected.route.component";
+import SignUpForm from "../components/form/sign-up.form.component";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
             <Calendar />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "sign-up",
+        element: null,
       },
     ],
   },

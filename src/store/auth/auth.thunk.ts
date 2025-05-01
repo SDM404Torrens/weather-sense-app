@@ -1,5 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { loginStart, loginSuccess, loginFailure } from "./auth.slice";
+import {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+  signUpStart,
+  signUpSuccess,
+  signUpFailure,
+} from "./auth.slice";
 
 interface LoginCredentials {
   email: string;
@@ -48,5 +55,46 @@ export const loginUser = createAsyncThunk(
       dispatch(loginFailure(errorMessage));
       throw error;
     }
+  }
+);
+
+interface SignUpDetails {
+  email: string;
+  password: string;
+}
+
+export const signUpUser = createAsyncThunk(
+  "auth/signUp",
+  async (userDetails: SignUpDetails, { dispatch }) => {
+    dispatch(signUpStart());
+    // const response = await fetch(`/auth/Authentication/signup`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(userDetails),
+    // });
+
+    const response = {
+      ok: true,
+      json: async () => ({
+        // user: { name: "John Doe", email: credentials.email },
+        token: "fake-jwt-token",
+        message: null,
+      }),
+    };
+
+    if (!response.ok) {
+      dispatch(signUpFailure("Failed to sign up"));
+      throw new Error("Failed to sign up");
+    }
+
+    const data = await response.json();
+    dispatch(
+      signUpSuccess({
+        token: data.token,
+      })
+    );
+    return data;
   }
 );
