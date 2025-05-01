@@ -75,6 +75,7 @@ export const signUpUser = createAsyncThunk(
     //   body: JSON.stringify(userDetails),
     // });
 
+    console.log("JSON.stringify(userDetails)", JSON.stringify(userDetails));
     const response = {
       ok: true,
       json: async () => ({
