@@ -1,9 +1,4 @@
-import {
-  FaRegSave,
-  FaRegCalendarAlt,
-  FaCog,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { FaRegSave, FaRegCalendarAlt, FaCog } from "react-icons/fa";
 import { CgLogOut, CgLogIn } from "react-icons/cg";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
