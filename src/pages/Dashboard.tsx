@@ -51,7 +51,7 @@ export default function Home() {
       </div>
       <WeatherChart
         title="Weekly Temperature"
-        description="4-week average"
+        description="7-week average"
         changePercentage={5}
         weeklyData={weeklyWeather}
     />
