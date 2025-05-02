@@ -9,6 +9,7 @@ import { signUpUser } from "../../store/auth/auth.thunk";
 
 const defaultFormFields = {
   name: "",
+  lastName: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -19,12 +20,13 @@ const SignUpForm = ({ onClose }: { onClose: () => void }) => {
   const dispatch = useAppDispatch();
   const isLoading = useSelector(selectAuthLoading);
   const error = useSelector(selectAuthError);
-  const { name, email, password, confirmPassword } = formFields;
+  const { name, lastName, email, password, confirmPassword } = formFields;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) return;
-    dispatch(signUpUser({ email, password })).then(() => {
+    const last_Name = lastName;
+    dispatch(signUpUser({ name, last_Name, email, password })).then(() => {
       onClose();
     });
   };
@@ -39,25 +41,44 @@ const SignUpForm = ({ onClose }: { onClose: () => void }) => {
       {error && <div className="text-red-500 text-sm">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label
-            htmlFor="name"
-            className="block mb-2 text-sm font-medium text-gray-700"
-          >
-            Full Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className="bg-blue-50/60 border border-blue-700/70 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-700 block w-full p-2.5 placeholder-blue-700/60"
-            placeholder="Thais Contreras"
-            required
-            value={name}
-            onChange={handleChange}
-          />
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <label
+              htmlFor="name"
+              className="block mb-2 text-sm font-medium text-gray-700"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              className="bg-blue-50/60 border border-blue-700/70 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-700 block w-full p-2.5 placeholder-blue-700/60"
+              placeholder="Thais"
+              required
+              value={name}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex-1">
+            <label
+              htmlFor="lastName"
+              className="block mb-2 text-sm font-medium text-gray-700"
+            >
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              className="bg-blue-50/60 border border-blue-700/70 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-700 block w-full p-2.5 placeholder-blue-700/60"
+              placeholder="Contreras"
+              required
+              value={lastName}
+              onChange={handleChange}
+            />
+          </div>
         </div>
-
         <div>
           <label
             htmlFor="email"

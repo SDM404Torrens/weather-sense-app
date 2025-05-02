@@ -60,6 +60,8 @@ export const loginUser = createAsyncThunk(
 );
 
 interface SignUpDetails {
+  name: string;
+  last_Name: string;
   email: string;
   password: string;
 }
@@ -75,16 +77,6 @@ export const signUpUser = createAsyncThunk(
       },
       body: JSON.stringify(userDetails),
     });
-
-    //  console.log("JSON.stringify(userDetails)", JSON.stringify(userDetails));
-    //   const response = {
-    //     ok: true,
-    //     json: async () => ({
-    //       // user: { name: "John Doe", email: credentials.email },
-    //       token: "fake-jwt-token",
-    //       message: null,
-    //     }),
-    //   };
 
     if (!response.ok) {
       dispatch(signUpFailure("Failed to sign up"));
