@@ -1,4 +1,3 @@
+import { RootState } from "../store";
 
-import { RootState } from '../store';
-
-export const selectUnit = (state: RootState): 'celsius' | 'fahrenheit' => state.temperature.unit;
+export const selectUnit = (state: RootState) => state.temperature.unit;

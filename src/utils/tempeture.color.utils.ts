@@ -1,8 +1,11 @@
-export const getTemperatureColor = (temp: number) => {
-  const coldTemp = -10;
-  const coolTemp = 10;
-  const mildTemp = 20;
-  const warmTemp = 30;
+export const getTemperatureColor = (
+  temp: number,
+  unit: "celsius" | "fahrenheit"
+) => {
+  const coldTemp = unit === "celsius" ? -10 : 14;
+  const coolTemp = unit === "celsius" ? 10 : 50;
+  const mildTemp = unit === "celsius" ? 20 : 68;
+  const warmTemp = unit === "celsius" ? 30 : 86;
 
   if (temp <= coldTemp) {
     return "from-blue-900 to-blue-800";

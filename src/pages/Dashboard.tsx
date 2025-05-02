@@ -1,60 +1,80 @@
-import { FaWind, FaCloudRain, FaTachometerAlt, FaSun } from 'react-icons/fa';
-import WeatherCard from '../components/card/card.weather.component';
-import Header from '../components/layout/header.component';
-import WeatherChart from '../components/chart/weather.chart';
+import WeatherCard from "../components/card/card.weather.component";
+import Header from "../components/layout/header.component";
+import WeatherChart from "../components/chart/weather.chart";
+import { useAppDispatch } from "../store/hooks/useAppDispatch";
+import { useSelector } from "react-redux";
+import {
+  selectCurrentWeather,
+  selectWeatherError,
+  selectWeatherLoading,
+  selectWeatherMetrics,
+  selectWeeklyWeather,
+} from "../store/weather/weather.selector";
+import { fetchWeatherByLocation } from "../store/weather/weather.thunk";
+import { useEffect } from "react";
 
-export default function Home() {
+const Dashboard = () => {
+  const dispatch = useAppDispatch();
+  const currentWeather = useSelector(selectCurrentWeather);
+  const weeklyWeather = useSelector(selectWeeklyWeather);
+  const metrics = useSelector(selectWeatherMetrics);
+  const loading = useSelector(selectWeatherLoading);
+  const error = useSelector(selectWeatherError);
 
-  const weatherData = {
-    currentTemp: 23,
-    location: 'Tegal, Indonesia',
-    metrics: [
-      { icon: <FaWind />, title: 'Wind Speed', value: '12km/h', change: '+2km/h' },
-      { icon: <FaCloudRain />, title: 'Rain Chance', value: '24%', change: '-10%' },
-      { icon: <FaTachometerAlt />, title: 'Pressure', value: '720 hpa', change: '-32 hpa' },
-      { icon: <FaSun />, title: 'UV Index', value: '2.3', change: '+0.3' },
-    ],
-  };
-
-  const weeklyWeather = [
-    { week: 'Week 1', temp: 22 },
-    { week: 'Week 2', temp: 24 },
-    { week: 'Week 3', temp: 19 },
-    { week: 'Week 4', temp: 21 },
-    { week: 'Week 5', temp: 28 },
-    { week: 'Week 6', temp: 30 },
-    { week: 'Week 7', temp: 25 },
-  ];
+  // Initial load - current location || selected location
+  useEffect(() => {
+    dispatch(fetchWeatherByLocation("Santo Domingo"));
+  }, [dispatch]);
 
   const handleSearch = (query: string) => {
-    console.log('Searching for:', query);
+    dispatch(fetchWeatherByLocation(query));
   };
+
+  if (loading) return <div>Loading weather data...</div>; // todo better loading state
+  if (error) return <div>Error: {error}</div>; //todo better error handling showing error message
 
   return (
     <div className="p-6">
-      <Header 
-        date="Thursday, Jan 4, 2022"
-        weatherData={weatherData}
-        onSearch={handleSearch}
-      />
+      {currentWeather && (
+        <Header
+          date={new Date(
+            new Date().getTime() + currentWeather.timezone * 1000
+          ).toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
+          weatherData={{
+            currentTemp: currentWeather.temp,
+            location: currentWeather.location,
+          }}
+          onSearch={handleSearch}
+        />
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {weatherData.metrics.map((metric, index) => (
-          <WeatherCard
-            key={index}
-            icon={metric.icon}
-            title={metric.title}
-            value={metric.value}
-            change={metric.change}
-          />
-        ))}
-      </div>
-      <WeatherChart
-        title="Weekly Temperature"
-        description="7-week average"
-        changePercentage={5}
-        weeklyData={weeklyWeather}
-    />
+      {metrics && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {metrics.map((metric, index) => (
+            <WeatherCard
+              key={index}
+              icon={metric.icon}
+              title={metric.title}
+              value={metric.value}
+              change={""} // todo: calculate base on data
+            />
+          ))}
+        </div>
+      )}
+      {weeklyWeather.length > 0 && (
+        <WeatherChart
+          title="Weekly Temperature"
+          description="7-week average"
+          changePercentage={5} // todo: calculate base on data
+          weeklyData={weeklyWeather}
+        />
+      )}
     </div>
   );
-}
+};
+export default Dashboard;
