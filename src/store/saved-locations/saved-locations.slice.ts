@@ -58,7 +58,7 @@ const savedLocationsSlice = createSlice({
     removeSavedLocationSuccess(state, action: PayloadAction<string>) {
       state.loading = false;
       state.savedLocations = state.savedLocations.filter(
-        (loc) => loc.id !== action.payload // Compare by ID
+        (loc) => loc.id !== action.payload
       );
     },
     removeSavedLocationFailure(state, action: PayloadAction<string>) {
