@@ -1,20 +1,19 @@
-
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 type TemperatureState = {
-  unit: 'celsius' | 'fahrenheit';
+  unit: "celsius" | "fahrenheit";
 };
 
 const initialState: TemperatureState = {
-  unit: 'celsius',
+  unit: "celsius",
 };
 
 export const temperatureSlice = createSlice({
-  name: 'temperature',
+  name: "temperature",
   initialState,
   reducers: {
     toggleUnit: (state) => {
-      state.unit = state.unit === 'celsius' ? 'fahrenheit' : 'celsius';
+      state.unit = state.unit === "celsius" ? "fahrenheit" : "celsius";
     },
   },
 });

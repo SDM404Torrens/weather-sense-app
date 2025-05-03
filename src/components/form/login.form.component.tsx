@@ -45,7 +45,7 @@ const LoginForm = () => {
             id="email"
             name="email"
             className="bg-blue-50/60 border border-blue-700/70 text-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-700 block w-full p-2.5 placeholder-blue-700/60"
-            placeholder="name@company.com"
+            placeholder="name@gmail.com"
             required
             value={email}
             onChange={handleChange}

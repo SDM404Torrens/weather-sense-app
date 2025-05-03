@@ -1,13 +1,17 @@
 import { FaRegSave, FaRegCalendarAlt, FaCog } from "react-icons/fa";
 import { CgLogOut, CgLogIn } from "react-icons/cg";
 import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { logout } from "../../store/auth/auth.slice";
 import { selectIsAuthenticated } from "../../store/auth/auth.selectors";
 import { useState } from "react";
 import LoginModal from "../modal/login.modal.component";
 import { getTemperatureColor } from "../../utils/tempeture.color.utils";
 import SignUpModal from "../modal/sign-up.modal.component";
+import { selectCurrentWeather } from "../../store/weather/weather.selector";
+import { selectUnit } from "../../store/tempeture/tempeture.selector";
+import { convertTemp } from "../../utils/tempeture.utils";
+import { useAppDispatch } from "../../store/hooks/useAppDispatch";
 
 function SidebarItem({
   icon,
@@ -33,31 +37,28 @@ function SidebarItem({
   );
 }
 
-export default function Sidebar() {
-  const dispatch = useDispatch();
+const Sidebar = () => {
+  const dispatch = useAppDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  // const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  console.log("isAuthenticated", isAuthenticated);
+  const currentWeather = useSelector(selectCurrentWeather);
+  const unit = useSelector(selectUnit);
   const [activeModal, setActiveModal] = useState<"login" | "signup" | null>(
     null
   );
-  const temperature = 10; // Example temperature
+
+  const temperature = currentWeather?.temp
+    ? convertTemp(currentWeather.temp, unit)
+    : convertTemp(10, unit);
 
   const gradientClasses =
     temperature !== undefined
-      ? getTemperatureColor(temperature)
+      ? getTemperatureColor(temperature, unit)
       : "from-blue-500 to-teal-400";
 
   const handleLogout = () => {
     dispatch(logout());
   };
-
-  // const handleLoginClick = () => {
-  //   setIsLoginModalOpen(true);
-  // };
-
-  // const handleCloseModal = () => {
-  //   setIsLoginModalOpen(false);
-  // };
 
   return (
     <div className="w-64 bg-gray-300 text-gray-600 p-6 flex flex-col h-screen">
@@ -117,4 +118,6 @@ export default function Sidebar() {
       />
     </div>
   );
-}
+};
+
+export default Sidebar;

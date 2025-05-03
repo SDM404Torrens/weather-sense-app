@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   user: null | {
+    id: string;
     email: string;
     name: string;
   };
@@ -14,8 +15,8 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  token: localStorage.getItem("token") || null,
-  isAuthenticated: false,
+  token: localStorage.getItem("token"),
+  isAuthenticated: !!localStorage.getItem("token"),
   isLoading: false,
   error: null,
 };
