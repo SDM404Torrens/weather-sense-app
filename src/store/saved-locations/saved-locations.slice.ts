@@ -55,13 +55,29 @@ const savedLocationsSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    removeSavedLocationSuccess(state, action: PayloadAction<SavedLocations>) {
+    removeSavedLocationSuccess(state, action: PayloadAction<string>) {
       state.loading = false;
       state.savedLocations = state.savedLocations.filter(
-        (loc) => loc !== action.payload
+        (loc) => loc.id !== action.payload
       );
     },
     removeSavedLocationFailure(state, action: PayloadAction<string>) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    fetchAllSavedLocationsStart(state) {
+      state.loading = true;
+      state.error = null;
+      state.savedLocations = [];
+    },
+    fetchAllSavedLocationsSuccess(
+      state,
+      action: PayloadAction<SavedLocations[]>
+    ) {
+      state.savedLocations = action.payload;
+      state.loading = false;
+    },
+    fetchAllSavedLocationsFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
     },
@@ -78,6 +94,9 @@ export const {
   removeSavedLocationStart,
   removeSavedLocationSuccess,
   removeSavedLocationFailure,
+  fetchAllSavedLocationsStart,
+  fetchAllSavedLocationsSuccess,
+  fetchAllSavedLocationsFailure,
 } = savedLocationsSlice.actions;
 
 export default savedLocationsSlice.reducer;

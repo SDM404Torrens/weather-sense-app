@@ -5,6 +5,9 @@ import {
   addSavedLocationFailure,
   addSavedLocationStart,
   addSavedLocationSuccess,
+  fetchAllSavedLocationsFailure,
+  fetchAllSavedLocationsStart,
+  fetchAllSavedLocationsSuccess,
   fetchSavedLocationFailure,
   removeSavedLocationFailure,
   removeSavedLocationSuccess,
@@ -29,6 +32,9 @@ export const fetchSavedLocation = createAsyncThunk(
       const token = state.auth.token;
 
       if (!token) {
+        thunkAPI.dispatch(
+          fetchSavedLocationFailure("No authentication token found")
+        );
         throw new Error("No authentication token found");
       }
 
@@ -44,7 +50,7 @@ export const fetchSavedLocation = createAsyncThunk(
 
       if (!savedLocationResponse.ok) {
         thunkAPI.dispatch(
-          fetchSavedLocationFailure("Failed to fetch current weather")
+          fetchSavedLocationFailure("Failed to fetch saved location")
         );
         return;
       }
@@ -77,7 +83,6 @@ export const addSavedLocation = createAsyncThunk(
         throw new Error("No authentication token found");
       }
 
-      console.log("token", token);
       const savedLocationsResponse = await fetch(`${API_BASE_URL}`, {
         method: "POST",
         headers: {
@@ -99,14 +104,14 @@ export const addSavedLocation = createAsyncThunk(
       }
 
       const data = await savedLocationsResponse.json();
-      const data2 = {
+      const dataMap = {
         id: data.data,
         location: location,
         latitude: latitude,
         longitude: longitude,
         userId: userId,
       };
-      thunkAPI.dispatch(addSavedLocationSuccess(data2));
+      thunkAPI.dispatch(addSavedLocationSuccess(dataMap));
       return location;
     } catch (error: any) {
       throw new Error(
@@ -118,38 +123,92 @@ export const addSavedLocation = createAsyncThunk(
 
 export const removeSavedLocation = createAsyncThunk(
   "savedLocations/remove",
-  async (userId: string, thunkAPI) => {
+  async (locationId: string, thunkAPI) => {
     try {
       // Get token
       const state = thunkAPI.getState() as RootState;
       const token = state.auth.token;
 
       if (!token) {
+        thunkAPI.dispatch(
+          removeSavedLocationFailure("No authentication token found")
+        );
         throw new Error("No authentication token found");
       }
-
-      console.log("token", token);
-      const removeSavedLocation = await fetch(`${API_BASE_URL}/${userId}`, {
+      const removeSavedLocation = await fetch(`${API_BASE_URL}/${locationId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("removeSavedLocation", removeSavedLocation);
 
       if (!removeSavedLocation.ok) {
         thunkAPI.dispatch(
-          removeSavedLocationFailure("Failed to fetch current weather")
+          removeSavedLocationFailure("Failed to remove saved location")
         );
         return;
       }
-      //success
-      const data = await removeSavedLocation.json();
-      thunkAPI.dispatch(removeSavedLocationSuccess(data));
+      thunkAPI.dispatch(removeSavedLocationSuccess(locationId));
     } catch (error: any) {
       throw new Error(
         error.response?.data?.message || "Failed to remove location"
+      );
+    }
+  }
+);
+
+export const fetchAllSavedLocations = createAsyncThunk(
+  "savedLocations/fetch/all",
+  async (userId: string, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(fetchAllSavedLocationsStart());
+      // Get token
+      const state = thunkAPI.getState() as RootState;
+      const token = state.auth.token;
+
+      if (!token) {
+        thunkAPI.dispatch(
+          fetchAllSavedLocationsFailure("No authentication token found")
+        );
+        throw new Error("No authentication token found");
+      }
+
+      console.log("token", token);
+      const fetchAllSavedLocationsResponse = await fetch(
+        `${API_BASE_URL}/list/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(
+        "fetchAllSavedLocationsResponse",
+        fetchAllSavedLocationsResponse
+      );
+
+      if (!fetchAllSavedLocationsResponse.ok) {
+        thunkAPI.dispatch(
+          fetchAllSavedLocationsFailure("Could not fetch all saved location")
+        );
+        return;
+      }
+
+      const data = await fetchAllSavedLocationsResponse.json();
+      const dataMap = data.data.map((item: any) => ({
+        id: item.id,
+        location: item.location,
+        latitude: item.latitude,
+        longitude: item.longitude,
+      }));
+      thunkAPI.dispatch(fetchAllSavedLocationsSuccess(dataMap));
+      return location;
+    } catch (error: any) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch all saved locations"
       );
     }
   }

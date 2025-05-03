@@ -70,7 +70,7 @@ const Sidebar = () => {
         </h1>
         {isAuthenticated ? (
           <nav className="space-y-4">
-            <SidebarItem icon={<FaRegSave />} to="/saved">
+            <SidebarItem icon={<FaRegSave />} to="/saved-locations">
               Saved Locations
             </SidebarItem>
             <SidebarItem icon={<FaRegCalendarAlt />} to="/calendar">
