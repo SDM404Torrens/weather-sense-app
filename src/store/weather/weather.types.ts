@@ -10,6 +10,8 @@ export interface CurrentWeather {
   location: string;
   timezone: number;
   metrics: WeatherMetrics;
+  longitude: number;
+  latitude: number;
 }
 
 export interface WeeklyWeatherData {

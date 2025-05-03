@@ -11,7 +11,19 @@ import {
   selectWeeklyWeather,
 } from "../store/weather/weather.selector";
 import { fetchWeatherByLocation } from "../store/weather/weather.thunk";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+
+// Debounce helper function
+function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -26,8 +38,18 @@ const Dashboard = () => {
     dispatch(fetchWeatherByLocation("Santo Domingo"));
   }, [dispatch]);
 
+  // Debounced
+  const debouncedSearch = useCallback(
+    debounce((query: string) => {
+      if (query.trim().length > 4) {
+        dispatch(fetchWeatherByLocation(query));
+      }
+    }, 500), // 500ms delay
+    [dispatch]
+  );
+
   const handleSearch = (query: string) => {
-    dispatch(fetchWeatherByLocation(query));
+    debouncedSearch(query);
   };
 
   if (loading) return <div>Loading weather data...</div>; // todo better loading state
@@ -48,6 +70,8 @@ const Dashboard = () => {
           weatherData={{
             currentTemp: currentWeather.temp,
             location: currentWeather.location,
+            latitude: currentWeather.latitude,
+            longitude: currentWeather.longitude,
           }}
           onSearch={handleSearch}
         />

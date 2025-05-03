@@ -34,6 +34,10 @@ interface ApiWeatherResponse {
     main: string;
     description: string;
   }>;
+  coord: {
+    lon: number;
+    lat: number;
+  };
   timezone: number;
 }
 
@@ -43,6 +47,8 @@ const mapCurrentWeatherData = (apiData: ApiWeatherResponse): CurrentWeather => {
   return {
     temp: apiData.main.temp,
     timezone: apiData.timezone,
+    longitude: apiData.coord.lon,
+    latitude: apiData.coord.lat,
     location: `${apiData.name}, ${apiData.sys.country}`,
     metrics: {
       windSpeed: `${apiData.wind.speed} km/h`,
@@ -64,26 +70,13 @@ export const fetchWeatherByLocation = createAsyncThunk(
   "weather/fetchByLocation",
   async (location: string, thunkAPI) => {
     try {
-      //   dispatch(fetchWeatherStart());
       thunkAPI.dispatch(fetchWeatherStart());
-
-      // // Get token from Redux state
-      // const state = thunkAPI.getState() as RootState;
-      // const token = state.auth.token;
-
-      // if (!token) {
-      //   throw new Error("No authentication token found");
-      // }
-
-      // console.log("token", token);
-      // current weather
       const currentResponse = await fetch(
         `${API_BASE_URL}/currentweather/location/${location}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            // Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -108,7 +101,6 @@ export const fetchWeatherByLocation = createAsyncThunk(
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            // Authorization: `Bearer ${token}`,
           },
         }
       );

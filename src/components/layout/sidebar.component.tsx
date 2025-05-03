@@ -1,7 +1,7 @@
 import { FaRegSave, FaRegCalendarAlt, FaCog } from "react-icons/fa";
 import { CgLogOut, CgLogIn } from "react-icons/cg";
 import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { logout } from "../../store/auth/auth.slice";
 import { selectIsAuthenticated } from "../../store/auth/auth.selectors";
 import { useState } from "react";
@@ -11,6 +11,7 @@ import SignUpModal from "../modal/sign-up.modal.component";
 import { selectCurrentWeather } from "../../store/weather/weather.selector";
 import { selectUnit } from "../../store/tempeture/tempeture.selector";
 import { convertTemp } from "../../utils/tempeture.utils";
+import { useAppDispatch } from "../../store/hooks/useAppDispatch";
 
 function SidebarItem({
   icon,
@@ -37,8 +38,9 @@ function SidebarItem({
 }
 
 const Sidebar = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  console.log("isAuthenticated", isAuthenticated);
   const currentWeather = useSelector(selectCurrentWeather);
   const unit = useSelector(selectUnit);
   const [activeModal, setActiveModal] = useState<"login" | "signup" | null>(
