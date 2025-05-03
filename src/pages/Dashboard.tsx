@@ -13,7 +13,7 @@ import {
 import { fetchWeatherByLocation } from "../store/weather/weather.thunk";
 import { useCallback, useEffect } from "react";
 
-// Debounce helper function
+// Debounce
 function debounce<T extends (...args: any[]) => void>(
   func: T,
   wait: number
