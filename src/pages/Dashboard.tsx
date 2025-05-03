@@ -12,6 +12,7 @@ import {
 } from "../store/weather/weather.selector";
 import { fetchWeatherByLocation } from "../store/weather/weather.thunk";
 import { useCallback, useEffect } from "react";
+import Loading from "../components/loading/loading.component";
 
 // Debounce
 function debounce<T extends (...args: any[]) => void>(
@@ -33,7 +34,7 @@ const Dashboard = () => {
   const loading = useSelector(selectWeatherLoading);
   const error = useSelector(selectWeatherError);
 
-  // Initial load - current location || selected location
+  // Initial load - current location || selected location //todo: get current location of user
   useEffect(() => {
     dispatch(fetchWeatherByLocation("Santo Domingo"));
   }, [dispatch]);
@@ -52,7 +53,7 @@ const Dashboard = () => {
     debouncedSearch(query);
   };
 
-  if (loading) return <div>Loading weather data...</div>; // todo better loading state
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>; //todo better error handling showing error message
 
   return (

@@ -39,7 +39,12 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
   const userId = useSelector(selectUserId);
 
   const isSaved = useSelector((state: RootState) =>
-    selectIsLocationSaved(state, weatherData.location)
+    selectIsLocationSaved(
+      state,
+      weatherData.location,
+      weatherData.latitude,
+      weatherData.longitude
+    )
   );
 
   const handleSave = () => {
@@ -54,7 +59,14 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
   };
 
   const handleRemove = () => {
-    dispatch(removeSavedLocation(weatherData.location));
+    const savedLocation = savedLocations.find(
+      (loc) =>
+        loc.location === weatherData.location ||
+        (loc.latitude === weatherData.latitude &&
+          loc.longitude === weatherData.longitude)
+    );
+    if (!savedLocation) return;
+    dispatch(removeSavedLocation(savedLocation.id));
   };
 
   return (
@@ -78,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
             />
             <FaSearch className="absolute left-3 top-3 text-gray-400" />
           </div>
-          {/* Saved locations dropdown */}
+          {/* Saved locations dropdown to remove?
           {isAuthenticated && savedLocations.length > 0 && searchValue && (
             <div className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-b-lg">
               {savedLocations
@@ -108,7 +120,7 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
                   </div>
                 ))}
             </div>
-          )}
+          )} */}
           {location && (
             <div className="flex items-center ml-4">
               <SaveLocationButton
