@@ -1,4 +1,4 @@
-import { FaSearch, FaRegBell, FaTimes } from "react-icons/fa";
+import { FaSearch, FaRegBell } from "react-icons/fa";
 import TemperatureToggle from "../toggle/toggle.temperature.component";
 import { convertTemp } from "../../utils/tempeture.utils";
 import { useSelector } from "react-redux";
@@ -17,7 +17,7 @@ import {
   selectIsLocationSaved,
   selectSavedLocations,
 } from "../../store/saved-locations/saved-locations.selector";
-import { useState } from "react";
+// import { useState } from "react";
 import { SaveLocationButton } from "../button/saved.locations.button";
 
 interface HeaderProps {
@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const savedLocations = useSelector(selectSavedLocations);
-  const [searchValue, setSearchValue] = useState("");
+  // const [searchValue, setSearchValue] = useState("");
   const userId = useSelector(selectUserId);
 
   const isSaved = useSelector((state: RootState) =>
