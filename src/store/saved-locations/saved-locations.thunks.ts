@@ -12,7 +12,6 @@ import {
   removeSavedLocationFailure,
   removeSavedLocationSuccess,
 } from "./saved-locations.slice";
-import { decodeToken } from "../../utils/token.utils";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL + "/UserFavoriteLocations";
