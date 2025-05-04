@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   CurrentWeather,
+  WeatherCondition,
   WeatherState,
   WeeklyWeatherData,
 } from "./weather.types";
@@ -8,6 +9,7 @@ import {
 const initialState: WeatherState = {
   currentWeather: null,
   weeklyWeather: [],
+  weatherConditions: [],
   loading: false,
   error: null,
 };
@@ -39,6 +41,21 @@ const weatherSlice = createSlice({
       state.currentWeather = null;
       state.weeklyWeather = [];
     },
+    fetchWeatherConditionsStart(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchWeatherConditionsSuccess(
+      state,
+      action: PayloadAction<WeatherCondition[]>
+    ) {
+      state.weatherConditions = action.payload;
+      state.loading = false;
+    },
+    fetchWeatherConditionsFailure(state, action: PayloadAction<string>) {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -48,6 +65,9 @@ export const {
   fetchWeeklyWeatherSuccess,
   fetchWeatherFailure,
   clearWeatherData,
+  fetchWeatherConditionsStart,
+  fetchWeatherConditionsSuccess,
+  fetchWeatherConditionsFailure,
 } = weatherSlice.actions;
 
 export default weatherSlice.reducer;

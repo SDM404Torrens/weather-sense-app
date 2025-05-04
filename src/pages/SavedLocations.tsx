@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppDispatch } from "../store/hooks/useAppDispatch";
 import { useSelector } from "react-redux";
 import { selectUserId } from "../store/auth/auth.selectors";
@@ -11,8 +11,13 @@ import {
   selectSavedLocationsError,
   selectSavedLocationsLoading,
 } from "../store/saved-locations/saved-locations.selector";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaRegBell, FaCheck } from "react-icons/fa";
 import Loading from "../components/loading/loading.component";
+import { fetchWeatherConditions } from "../store/weather/weather.thunk";
+import { addAlert, fetchAllAlerts } from "../store/alerts/alerts.thunks";
+import AddAlertModal from "../components/modal/add-alert.modal.component";
+import { IoIosAdd } from "react-icons/io";
+import { selectAlertsByLocation } from "../store/alerts/alerts.selector";
 
 export default function SavedLocations() {
   const dispatch = useAppDispatch();
@@ -20,12 +25,30 @@ export default function SavedLocations() {
   const loading = useSelector(selectSavedLocationsLoading);
   const error = useSelector(selectSavedLocationsError);
   const userId = useSelector(selectUserId);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<{
+    id: string;
+    location: string;
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   useEffect(() => {
     if (userId !== undefined) {
       dispatch(fetchAllSavedLocations(userId));
+      dispatch(fetchAllAlerts(userId));
     }
   }, [dispatch, userId]);
+
+  useEffect(() => {
+    dispatch(fetchWeatherConditions());
+  }, [dispatch]);
+
+  const alertsByLocation = useSelector(selectAlertsByLocation);
+
+  const hasAlert = (location: string) => {
+    return alertsByLocation[location];
+  };
 
   const handleDelete = async (locationId: string) => {
     try {
@@ -36,12 +59,50 @@ export default function SavedLocations() {
     }
   };
 
+  const handleAddAlertClick = (location: {
+    id: string;
+    location: string;
+    latitude: number;
+    longitude: number;
+  }) => {
+    setSelectedLocation(location);
+    if (!!hasAlert(location.location)) {
+      setIsAlertModalOpen(false);
+      return;
+    }
+    setIsAlertModalOpen(true);
+  };
+
+  const handleSubmitAlert = async (alertData: {
+    name: string;
+    startDate: string;
+    endDate: string;
+    desiredWeather: number;
+  }) => {
+    if (!selectedLocation || !userId) return;
+
+    dispatch(
+      addAlert({
+        userId,
+        name: alertData.name,
+        start_Date: alertData.startDate,
+        end_Date: alertData.endDate,
+        desired_Weather: alertData.desiredWeather,
+        location: selectedLocation.location,
+        latitude: selectedLocation.latitude,
+        longitude: selectedLocation.longitude,
+      })
+    ).unwrap();
+
+    setIsAlertModalOpen(false);
+  };
+
   if (loading) return <Loading />;
 
   if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
 
   return (
-    <div>
+    <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6 text-blue-700">Saved Locations</h1>
       <div className="grid gap-4">
         {locations.length === 0 ? (
@@ -63,18 +124,53 @@ export default function SavedLocations() {
                   </p>
                 </div>
 
-                <button
-                  onClick={() => handleDelete(location.id)}
-                  className="text-red-500 hover:text-red-700 p-2 cursor-pointer transition-colors"
-                  aria-label={`Delete ${location.location}`}
-                >
-                  <FaTrash />
-                </button>
+                <div className="flex gap-2  ">
+                  <button
+                    onClick={() => handleAddAlertClick(location)}
+                    className={`text-blue-500 hover:text-blue-700 p-2  transition-colors relative flex items-center justify-center p-2 rounded-full transition-all duration-200"
+                      ${
+                        !!hasAlert(location.location)
+                          ? "text-green-600  hover:text-green-600"
+                          : "text-blue-700 hover:text-blue-700 hover:bg-blue-50 cursor-pointer"
+                      }`}
+                    aria-label={`Add alert for ${location.location}`}
+                  >
+                    <FaRegBell />
+                    <span
+                      className={`absolute -top-1 -right-1 h-3 w-3 flex items-center justify-center rounded-full ${
+                        !!hasAlert(location.location)
+                          ? "bg-green-500 text-white"
+                          : "bg-blue-500 text-white "
+                      }`}
+                    >
+                      {!!hasAlert(location.location) ? (
+                        <FaCheck className="w-2 h-2" />
+                      ) : (
+                        <IoIosAdd className="w-2 h-2 cursor-pointer" />
+                      )}
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => handleDelete(location.id)}
+                    className="text-red-500 hover:text-red-700 p-2 cursor-pointer transition-colors"
+                    aria-label={`Delete ${location.location}`}
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
+      {isAlertModalOpen && selectedLocation && (
+        <AddAlertModal
+          isOpen={isAlertModalOpen}
+          onClose={() => setIsAlertModalOpen(false)}
+          onSubmit={handleSubmitAlert}
+          locationName={selectedLocation.location}
+        />
+      )}
     </div>
   );
 }
