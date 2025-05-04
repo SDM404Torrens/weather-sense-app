@@ -13,7 +13,6 @@ import {
 import { fetchWeatherByLocation } from "../store/weather/weather.thunk";
 import { useCallback, useEffect } from "react";
 import Loading from "../components/loading/loading.component";
-import { selectSavedLocations } from "../store/saved-locations/saved-locations.selector";
 import { selectUserId } from "../store/auth/auth.selectors";
 import { fetchAllSavedLocations } from "../store/saved-locations/saved-locations.thunks";
 
