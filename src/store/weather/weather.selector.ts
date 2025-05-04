@@ -37,3 +37,6 @@ export const selectWeatherMetrics = (state: RootState) => {
     },
   ];
 };
+
+export const selectWeatherConditions = (state: RootState) =>
+  state.weather.weatherConditions;

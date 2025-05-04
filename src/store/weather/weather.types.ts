@@ -19,9 +19,15 @@ export interface WeeklyWeatherData {
   temp: number;
 }
 
+export interface WeatherCondition {
+  type: string;
+  value: number;
+}
+
 export interface WeatherState {
   currentWeather: CurrentWeather | null;
   weeklyWeather: WeeklyWeatherData[];
+  weatherConditions: WeatherCondition[];
   loading: boolean;
   error: string | null;
 }

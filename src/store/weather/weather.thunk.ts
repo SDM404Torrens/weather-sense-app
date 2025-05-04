@@ -4,8 +4,12 @@ import {
   fetchCurrentWeatherSuccess,
   fetchWeeklyWeatherSuccess,
   fetchWeatherFailure,
+  fetchWeatherConditionsStart,
+  fetchWeatherConditionsFailure,
+  fetchWeatherConditionsSuccess,
 } from "./weather.slice";
 import { CurrentWeather, WeeklyWeatherData } from "./weather.types";
+import { RootState } from "../store";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/WeatherInformation";
 
@@ -118,6 +122,45 @@ export const fetchWeatherByLocation = createAsyncThunk(
       thunkAPI.dispatch(fetchWeeklyWeatherSuccess(weeklyWeather));
     } catch (error: any) {
       thunkAPI.dispatch(fetchWeatherFailure(error.message));
+      throw error;
+    }
+  }
+);
+
+export const fetchWeatherConditions = createAsyncThunk(
+  "weather/fetchWeatherConditions",
+  async (_, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(fetchWeatherConditionsStart());
+      const state = thunkAPI.getState() as RootState;
+      const token = state.auth.token;
+
+      if (!token) {
+        thunkAPI.dispatch(
+          fetchWeatherConditionsFailure("No authentication token found")
+        );
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch(`${API_BASE_URL}/weathertypes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        thunkAPI.dispatch(
+          fetchWeatherConditionsFailure("Failed to fetch weather conditions")
+        );
+        return;
+      }
+
+      const data = await response.json();
+      thunkAPI.dispatch(fetchWeatherConditionsSuccess(data.data));
+    } catch (error: any) {
+      thunkAPI.dispatch(fetchWeatherConditionsFailure(error.message));
       throw error;
     }
   }

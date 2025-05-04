@@ -35,7 +35,6 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const savedLocations = useSelector(selectSavedLocations);
-  // const [searchValue, setSearchValue] = useState("");
   const userId = useSelector(selectUserId);
 
   const isSaved = useSelector((state: RootState) =>
@@ -85,42 +84,16 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
             <input
               type="text"
               placeholder="Search location here"
-              onChange={(e) => onSearch?.(e.target.value)}
+              onChange={(e) => {
+                e.preventDefault();
+                const value = e.target.value.replace(/[^a-zA-Z\s]/g, ""); // removing numbers and special characters
+                onSearch?.(value);
+              }}
               className="w-full pl-10 pr-46 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <FaSearch className="absolute left-3 top-3 text-gray-400" />
           </div>
-          {/* Saved locations dropdown to remove?
-          {isAuthenticated && savedLocations.length > 0 && searchValue && (
-            <div className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-b-lg">
-              {savedLocations
-                .filter((loc) =>
-                  loc.location
-                    ?.toLowerCase()
-                    .includes(searchValue.toLowerCase())
-                )
-                .map((savedLoc) => (
-                  <div
-                    key={savedLoc.location}
-                    className="p-2 hover:bg-gray-100 cursor-pointer flex justify-between"
-                    onClick={() => {
-                      setSearchValue(savedLoc.location);
-                      onSearch?.(savedLoc.location);
-                    }}
-                  >
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        dispatch(removeSavedLocation(savedLoc.location));
-                      }}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <FaTimes />
-                    </button>
-                  </div>
-                ))}
-            </div>
-          )} */}
+
           {location && (
             <div className="flex items-center ml-4">
               <SaveLocationButton
@@ -131,10 +104,6 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
               />
             </div>
           )}
-          <button className="p-2 text-gray-500 hover:text-gray-700 relative">
-            <FaRegBell className="text-xl" />
-            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
-          </button>
 
           <TemperatureToggle />
         </div>

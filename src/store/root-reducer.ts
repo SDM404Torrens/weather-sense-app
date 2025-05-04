@@ -3,10 +3,12 @@ import temperatureReducer from "./tempeture/tempeture.slice";
 import authReducer from "./auth/auth.slice";
 import weatherReducer from "./weather/weather.slice";
 import savedLocationsReducer from "./saved-locations/saved-locations.slice";
+import alertsReducer from "./alerts/alerts.slice";
 
 export const rootReducer = combineReducers({
   temperature: temperatureReducer,
   auth: authReducer,
   weather: weatherReducer,
   savedLocations: savedLocationsReducer,
+  alerts: alertsReducer,
 });
