@@ -40,3 +40,13 @@ export const selectWeatherMetrics = (state: RootState) => {
 
 export const selectWeatherConditions = (state: RootState) =>
   state.weather.weatherConditions;
+
+// export const selectDesiredWeatherDescription = (
+//   state: RootState,
+//   value: number
+// ): string => {
+//   const conditions = state.weather.weatherConditions;
+//   if (!conditions || !conditions[value]) return "";
+
+//   return conditions[value].type || "";
+// };

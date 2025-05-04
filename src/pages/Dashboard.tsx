@@ -11,22 +11,11 @@ import {
   selectWeeklyWeather,
 } from "../store/weather/weather.selector";
 import { fetchWeatherByLocation } from "../store/weather/weather.thunk";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import Loading from "../components/loading/loading.component";
 import { selectUserId } from "../store/auth/auth.selectors";
 import { fetchAllSavedLocations } from "../store/saved-locations/saved-locations.thunks";
-
-// Debounce
-function debounce<T extends (...args: any[]) => void>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
+import { toast, ToastContainer } from "react-toastify";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -48,25 +37,27 @@ const Dashboard = () => {
     }
   }, [dispatch, userId]);
 
-  // Debounced
-  const debouncedSearch = useCallback(
-    debounce((query: string) => {
-      if (query.trim().length > 4) {
-        dispatch(fetchWeatherByLocation(query));
-      }
-    }, 500), // 500ms delay
-    [dispatch]
-  );
-
   const handleSearch = (query: string) => {
-    debouncedSearch(query);
+    dispatch(fetchWeatherByLocation(query));
   };
 
+  useEffect(() => {
+    if (!error) return;
+    toast.error(error, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }, [error]);
+
   if (loading) return <Loading />;
-  if (error) return <div>Error: {error}</div>; //todo better error handling showing error message
 
   return (
     <div className="p-6">
+      <ToastContainer />
       {currentWeather && (
         <Header
           date={new Date(
@@ -104,7 +95,14 @@ const Dashboard = () => {
         <WeatherChart
           title="Weekly Temperature"
           description="7-week average"
-          changePercentage={5} // todo: calculate base on data
+          changePercentage={Number(
+            (
+              ((weeklyWeather[weeklyWeather.length - 1].temp -
+                weeklyWeather[0].temp) /
+                weeklyWeather[0].temp) *
+              100
+            ).toFixed(2)
+          )} // Calculate percentage change based on weeklyWeather data
           weeklyData={weeklyWeather}
         />
       )}

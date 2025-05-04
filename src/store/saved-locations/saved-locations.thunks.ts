@@ -158,6 +158,9 @@ export const removeSavedLocation = createAsyncThunk(
       }
       thunkAPI.dispatch(removeSavedLocationSuccess(locationId));
     } catch (error: any) {
+      thunkAPI.dispatch(
+        removeSavedLocationFailure("Failed to remove saved locations")
+      );
       throw new Error(
         error.response?.data?.message || "Failed to remove location"
       );
@@ -214,6 +217,9 @@ export const fetchAllSavedLocations = createAsyncThunk(
       thunkAPI.dispatch(fetchAllSavedLocationsSuccess(dataMap));
       return location;
     } catch (error: any) {
+      thunkAPI.dispatch(
+        fetchAllSavedLocationsFailure("Failed to fetch all saved locations")
+      );
       throw new Error(
         error.response?.data?.message || "Failed to fetch all saved locations"
       );

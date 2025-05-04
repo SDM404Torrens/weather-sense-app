@@ -55,7 +55,7 @@ const mapCurrentWeatherData = (apiData: ApiWeatherResponse): CurrentWeather => {
     latitude: apiData.coord.lat,
     location: `${apiData.name}, ${apiData.sys.country}`,
     metrics: {
-      windSpeed: `${apiData.wind.speed} km/h`,
+      windSpeed: `${apiData.wind.speed} m/s`,
       cloudiness: `${apiData.clouds.all}%`,
       pressure: `${apiData.main.pressure} hpa`,
       humidity: `${apiData.main.humidity}%`,
@@ -84,7 +84,6 @@ export const fetchWeatherByLocation = createAsyncThunk(
           },
         }
       );
-      console.log("currentResponse)", currentResponse);
 
       if (!currentResponse.ok) {
         thunkAPI.dispatch(
@@ -94,7 +93,6 @@ export const fetchWeatherByLocation = createAsyncThunk(
       }
 
       const currentData = await currentResponse.json();
-      console.log("currentData", currentData);
       const currentWeather = mapCurrentWeatherData(currentData.data);
       thunkAPI.dispatch(fetchCurrentWeatherSuccess(currentWeather));
 
@@ -115,13 +113,12 @@ export const fetchWeatherByLocation = createAsyncThunk(
         );
         return;
       }
+
       const weeklyData = await weeklyResponse.json();
-      console.log("weeklyData", weeklyData);
       const weeklyWeather = mapWeeklyWeatherData(weeklyData.data);
-      console.log("weeklyWeather", weeklyWeather);
       thunkAPI.dispatch(fetchWeeklyWeatherSuccess(weeklyWeather));
     } catch (error: any) {
-      thunkAPI.dispatch(fetchWeatherFailure(error.message));
+      thunkAPI.dispatch(fetchWeatherFailure("Failed to fetch weather"));
       throw error;
     }
   }
@@ -160,7 +157,9 @@ export const fetchWeatherConditions = createAsyncThunk(
       const data = await response.json();
       thunkAPI.dispatch(fetchWeatherConditionsSuccess(data.data));
     } catch (error: any) {
-      thunkAPI.dispatch(fetchWeatherConditionsFailure(error.message));
+      thunkAPI.dispatch(
+        fetchWeatherConditionsFailure("Failed to fetch weather conditions")
+      );
       throw error;
     }
   }
