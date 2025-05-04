@@ -7,6 +7,9 @@ import {
   addAlertStart,
   addAlertSuccess,
   addAlertFailure,
+  removeAlertSuccess,
+  removeAlertFailure,
+  removeAlertStart,
 } from "./alerts.slice";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/UserEvents";
@@ -90,6 +93,40 @@ export const addAlert = createAsyncThunk(
       const newAlert = { ...alertData, id: data.data };
       thunkAPI.dispatch(addAlertSuccess(newAlert));
       return newAlert;
+    } catch (error: any) {
+      thunkAPI.dispatch(addAlertFailure(error.message));
+      throw error;
+    }
+  }
+);
+
+export const removeAlert = createAsyncThunk(
+  "alerts/remove",
+  async (alertId: string, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(removeAlertStart());
+      const state = thunkAPI.getState() as RootState;
+      const token = state.auth.token;
+
+      if (!token) {
+        thunkAPI.dispatch(removeAlertFailure("No authentication token found"));
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch(`${API_BASE_URL}/${alertId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        thunkAPI.dispatch(removeAlertFailure("Failed to remove alert"));
+        return;
+      }
+
+      thunkAPI.dispatch(removeAlertSuccess(alertId));
     } catch (error: any) {
       thunkAPI.dispatch(addAlertFailure(error.message));
       throw error;

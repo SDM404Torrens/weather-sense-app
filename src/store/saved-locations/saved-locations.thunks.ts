@@ -83,6 +83,13 @@ export const addSavedLocation = createAsyncThunk(
         throw new Error("No authentication token found");
       }
 
+      if (state.savedLocations.savedLocations.length >= 6) {
+        thunkAPI.dispatch(
+          addSavedLocationFailure("Maximum of 6 locations allowed")
+        );
+        throw new Error("Maximum of 6 locations allowed");
+      }
+
       const savedLocationsResponse = await fetch(`${API_BASE_URL}`, {
         method: "POST",
         headers: {
