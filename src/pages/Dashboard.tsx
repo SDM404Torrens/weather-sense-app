@@ -42,7 +42,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    toast.error(`Error: ${error}`, {
+    if (!error) return;
+    toast.error(error, {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -57,7 +58,6 @@ const Dashboard = () => {
   return (
     <div className="p-6">
       <ToastContainer />
-      {error && toast.error(error)}
       {currentWeather && (
         <Header
           date={new Date(

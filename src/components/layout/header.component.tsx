@@ -130,7 +130,7 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
                 className={`
-                  ml-2 px-3 py-1 text-sm rounded-full transition-colors 
+                  ml-2 px-2 py-1 text-sm rounded-full transition-colors 
                   ${
                     hasSearchQuery
                       ? "text-blue-600 hover:text-blue-800 hover:bg-blue-50"
