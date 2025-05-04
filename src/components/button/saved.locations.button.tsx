@@ -67,7 +67,7 @@ export const SaveLocationButton = ({
       </button>
       {/* Confirmation tooltip */}
       {showConfirmation && (
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-blue-700/60 text-white text-xs rounded whitespace-nowrap">
+        <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-green-700 text-white text-xs rounded whitespace-nowrap">
           Location saved!
         </div>
       )}
