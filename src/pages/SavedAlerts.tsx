@@ -10,6 +10,7 @@ import { selectUserId } from "../store/auth/auth.selectors";
 import Loading from "../components/loading/loading.component";
 import { useEffect } from "react";
 import { TbCalendarMonth, TbLocation } from "react-icons/tb";
+import { FaTrash } from "react-icons/fa";
 
 const SavedAlerts = () => {
   const alerts = useSelector(selectAllAlerts);
