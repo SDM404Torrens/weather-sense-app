@@ -85,7 +85,7 @@ export const fetchWeatherByLocation = createAsyncThunk(
         }
       );
 
-      if (!currentResponse.ok) {
+      if (true) {
         thunkAPI.dispatch(
           fetchWeatherFailure("Failed to fetch current weather")
         );

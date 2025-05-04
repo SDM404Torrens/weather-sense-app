@@ -15,6 +15,7 @@ import { useCallback, useEffect } from "react";
 import Loading from "../components/loading/loading.component";
 import { selectUserId } from "../store/auth/auth.selectors";
 import { fetchAllSavedLocations } from "../store/saved-locations/saved-locations.thunks";
+import { toast, ToastContainer } from "react-toastify";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -40,11 +41,23 @@ const Dashboard = () => {
     dispatch(fetchWeatherByLocation(query));
   };
 
+  useEffect(() => {
+    toast.error(`Error: ${error}`, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }, [error]);
+
   if (loading) return <Loading />;
-  if (error) return <div>Error: {error}</div>; //todo better error handling showing error message
 
   return (
     <div className="p-6">
+      <ToastContainer />
+      {error && toast.error(error)}
       {currentWeather && (
         <Header
           date={new Date(
