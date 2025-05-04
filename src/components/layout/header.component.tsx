@@ -1,4 +1,4 @@
-import { FaSearch } from "react-icons/fa";
+import { FaSearchLocation, FaTimes } from "react-icons/fa";
 import TemperatureToggle from "../toggle/toggle.temperature.component";
 import { convertTemp } from "../../utils/tempeture.utils";
 import { useSelector } from "react-redux";
@@ -17,8 +17,8 @@ import {
   selectIsLocationSaved,
   selectSavedLocations,
 } from "../../store/saved-locations/saved-locations.selector";
-// import { useState } from "react";
 import { SaveLocationButton } from "../button/saved.locations.button";
+import { useState } from "react";
 
 interface HeaderProps {
   date: string;
@@ -36,6 +36,9 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const savedLocations = useSelector(selectSavedLocations);
   const userId = useSelector(selectUserId);
+  const [isHovering, setIsHovering] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [hasSearchQuery, setHasSearchQuery] = useState(false);
 
   const isSaved = useSelector((state: RootState) =>
     selectIsLocationSaved(
@@ -69,6 +72,23 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
     dispatch(removeSavedLocation(savedLocation.id));
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+    setSearchQuery(value);
+    setHasSearchQuery(value.length > 0);
+  };
+
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim()) {
+      onSearch?.(searchQuery.trim());
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    setHasSearchQuery(false);
+  };
+
   return (
     <header className="bg-white rounded-lg shadow-sm p-6 mb-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-1">
@@ -85,14 +105,47 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
             <input
               type="text"
               placeholder="Search location here"
-              onChange={(e) => {
-                e.preventDefault();
-                const value = e.target.value.replace(/[^a-zA-Z\s]/g, ""); // removing numbers and special characters
-                onSearch?.(value);
-              }}
-              className="w-full pl-10 pr-46 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e)}
+              onKeyDown={(e) =>
+                e.key === "Enter" &&
+                hasSearchQuery &&
+                onSearch?.(searchQuery.trim())
+              }
+              className="w-full pl-4 pr-24 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <FaSearch className="absolute left-3 top-3 text-gray-400" />
+
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+              {hasSearchQuery && (
+                <button
+                  onClick={handleClearSearch}
+                  className="p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+                >
+                  <FaTimes className="w-4 h-4" />
+                </button>
+              )}
+              <button
+                onClick={handleSearchSubmit}
+                // disabled={!hasSearchQuery}
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+                className={`
+                  ml-2 px-3 py-1 text-sm rounded-full transition-colors 
+                  ${
+                    hasSearchQuery
+                      ? "text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                      : "text-gray-400 "
+                  }
+                `}
+              >
+                <FaSearchLocation className="w-4 h-4" />
+              </button>
+              {searchQuery != "" && isHovering && (
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-blue-700 text-white text-xs rounded whitespace-nowrap">
+                  Click to search location
+                </div>
+              )}
+            </div>
           </div>
 
           {savedLocations.length > 0 && (

@@ -16,18 +16,6 @@ import Loading from "../components/loading/loading.component";
 import { selectUserId } from "../store/auth/auth.selectors";
 import { fetchAllSavedLocations } from "../store/saved-locations/saved-locations.thunks";
 
-// Debounce
-function debounce<T extends (...args: any[]) => void>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
-
 const Dashboard = () => {
   const dispatch = useAppDispatch();
   const currentWeather = useSelector(selectCurrentWeather);
@@ -48,18 +36,8 @@ const Dashboard = () => {
     }
   }, [dispatch, userId]);
 
-  // Debounced
-  const debouncedSearch = useCallback(
-    debounce((query: string) => {
-      if (query.trim().length > 4) {
-        dispatch(fetchWeatherByLocation(query));
-      }
-    }, 500), // 500ms delay
-    [dispatch]
-  );
-
   const handleSearch = (query: string) => {
-    debouncedSearch(query);
+    dispatch(fetchWeatherByLocation(query));
   };
 
   if (loading) return <Loading />;
