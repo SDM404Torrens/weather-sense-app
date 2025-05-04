@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import Card from "../components/card/card.component";
 import {
   selectAlertError,
   selectAllAlerts,
@@ -17,18 +16,6 @@ const SavedAlerts = () => {
   const userId = useSelector(selectUserId);
   const loading = useSelector(selectIsLoading);
   const error = useSelector(selectAlertError);
-
-  /*
- id?: string;
-  userId: string;
-  name: string;
-  start_Date: string;
-  end_Date: string;
-  desired_Weather: number;
-  location: string;
-  latitude: number;
-  longitude: number;
-  */
 
   const handleDelete = async (alertId: string) => {
     try {
