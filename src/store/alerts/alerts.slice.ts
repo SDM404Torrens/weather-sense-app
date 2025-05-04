@@ -15,6 +15,7 @@ interface Alert {
   location: string;
   latitude: number;
   longitude: number;
+  desired_Weather_Description: string;
 }
 
 interface AlertsState {

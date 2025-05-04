@@ -27,6 +27,8 @@ const AddAlertModal: React.FC<AddAlertModalProps> = ({
   const [endDate, setEndDate] = useState("");
   const [desiredWeather, setDesiredWeather] = useState<number>(0);
   const isLoading = useSelector(selectIsLoading);
+  const [showErrorStartDate, setShowErrorStartDate] = useState(false);
+  const [showErrorEndDate, setShowErrorEndDate] = useState(false);
 
   useEffect(() => {
     console.log("isOpen", isOpen);
@@ -49,6 +51,31 @@ const AddAlertModal: React.FC<AddAlertModalProps> = ({
       endDate,
       desiredWeather,
     });
+  };
+  const handleChangeStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const now = new Date();
+    now.setSeconds(0, 0); // Set seconds and milliseconds to zero
+    const selectedDate = new Date(e.target.value);
+
+    console.log("selectedDate", selectedDate);
+    console.log("now", now);
+    if (selectedDate >= now) {
+      setStartDate(e.target.value);
+      setShowErrorStartDate(false);
+    } else {
+      setShowErrorStartDate(true);
+    }
+  };
+
+  const handleChangeEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const now = new Date();
+    const selectedDate = new Date(e.target.value);
+    if (selectedDate >= now) {
+      setEndDate(e.target.value);
+      setShowErrorEndDate(false);
+    } else {
+      setShowErrorEndDate(true);
+    }
   };
 
   return (
@@ -104,7 +131,7 @@ const AddAlertModal: React.FC<AddAlertModalProps> = ({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                  placeholder="e.g., Rain Alert"
+                  placeholder="Rain Alert"
                   required
                 />
               </div>
@@ -121,11 +148,17 @@ const AddAlertModal: React.FC<AddAlertModalProps> = ({
                     type="datetime-local"
                     id="start-date"
                     value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    onChange={handleChangeStartDate}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     required
                   />
+                  {showErrorStartDate && (
+                    <p className="mt-1 text-sm text-red-600">
+                      Start date must be in the future
+                    </p>
+                  )}
                 </div>
+
                 <div>
                   <label
                     htmlFor="end-date"
@@ -137,10 +170,15 @@ const AddAlertModal: React.FC<AddAlertModalProps> = ({
                     type="datetime-local"
                     id="end-date"
                     value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
+                    onChange={handleChangeEndDate}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     required
                   />
+                  {showErrorEndDate && (
+                    <p className="mt-1 text-sm text-red-600">
+                      End date must be in the future
+                    </p>
+                  )}
                 </div>
               </div>
 

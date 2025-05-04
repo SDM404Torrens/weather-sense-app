@@ -11,7 +11,7 @@ import {
   selectWeeklyWeather,
 } from "../store/weather/weather.selector";
 import { fetchWeatherByLocation } from "../store/weather/weather.thunk";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import Loading from "../components/loading/loading.component";
 import { selectUserId } from "../store/auth/auth.selectors";
 import { fetchAllSavedLocations } from "../store/saved-locations/saved-locations.thunks";

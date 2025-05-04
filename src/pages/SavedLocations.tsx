@@ -18,6 +18,7 @@ import { fetchWeatherConditions } from "../store/weather/weather.thunk";
 import { addAlert, fetchAllAlerts } from "../store/alerts/alerts.thunks";
 import AddAlertModal from "../components/modal/add-alert.modal.component";
 import { selectAlertsByLocation } from "../store/alerts/alerts.selector";
+import { selectWeatherConditions } from "../store/weather/weather.selector";
 
 export default function SavedLocations() {
   const dispatch = useAppDispatch();
@@ -25,6 +26,8 @@ export default function SavedLocations() {
   const loading = useSelector(selectSavedLocationsLoading);
   const error = useSelector(selectSavedLocationsError);
   const userId = useSelector(selectUserId);
+  const weatherConditions = useSelector(selectWeatherConditions);
+
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{
     id: string;
@@ -81,6 +84,10 @@ export default function SavedLocations() {
   }) => {
     if (!selectedLocation || !userId) return;
 
+    const desiredWeatherDescription = weatherConditions.find(
+      (condition) => condition.value === alertData.desiredWeather
+    )?.type;
+
     dispatch(
       addAlert({
         userId,
@@ -91,6 +98,7 @@ export default function SavedLocations() {
         location: selectedLocation.location,
         latitude: selectedLocation.latitude,
         longitude: selectedLocation.longitude,
+        desired_Weather_Description: desiredWeatherDescription || "",
       })
     ).unwrap();
 

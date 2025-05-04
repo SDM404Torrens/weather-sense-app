@@ -20,6 +20,7 @@ interface SaveAlertParams {
   start_Date: string;
   end_Date: string;
   desired_Weather: number;
+  desired_Weather_Description: string;
   location: string;
   latitude: number;
   longitude: number;
