@@ -101,6 +101,7 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
                 isSaved={isSaved}
                 onSave={handleSave}
                 onRemove={handleRemove}
+                hasReachedLimit={savedLocations.length >= 6}
               />
             </div>
           )}

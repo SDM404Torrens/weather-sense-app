@@ -1,4 +1,4 @@
-import { FaRegSave, FaRegCalendarAlt, FaCog } from "react-icons/fa";
+import { FaRegSave, FaRegCalendarAlt, FaCog, FaRegBell } from "react-icons/fa";
 import { CgLogOut, CgLogIn } from "react-icons/cg";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -73,9 +73,12 @@ const Sidebar = () => {
             <SidebarItem icon={<FaRegSave />} to="/saved-locations">
               Saved Locations
             </SidebarItem>
-            <SidebarItem icon={<FaRegCalendarAlt />} to="/calendar">
-              Calendar
+            <SidebarItem icon={<FaRegBell />} to="/saved-alerts">
+              Saved Alerts
             </SidebarItem>
+            {/* <SidebarItem icon={<FaRegCalendarAlt />} to="/calendar">
+              Calendar
+            </SidebarItem> */}
           </nav>
         ) : (
           <></>
@@ -85,9 +88,9 @@ const Sidebar = () => {
       <div className="mt-auto space-y-4">
         {isAuthenticated ? (
           <>
-            <SidebarItem icon={<FaCog />} to="/settings">
+            {/* <SidebarItem icon={<FaCog />} to="/settings">
               Settings
-            </SidebarItem>
+            </SidebarItem> */}
             <button
               onClick={handleLogout}
               className="flex items-center space-x-3 p-3 rounded-lg transition-colors w-full hover:text-blue-800"

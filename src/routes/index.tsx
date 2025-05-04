@@ -3,6 +3,7 @@ import App from "../App";
 import Dashboard from "../pages/Dashboard";
 import SavedLocations from "../pages/SavedLocations";
 import ProtectedRoute from "../components/protected/protected.route.component";
+import SavedAlerts from "../pages/SavedAlerts";
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <SavedLocations />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "saved-alerts",
+        element: (
+          <ProtectedRoute>
+            <SavedAlerts />
           </ProtectedRoute>
         ),
       },
