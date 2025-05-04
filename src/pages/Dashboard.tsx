@@ -104,7 +104,14 @@ const Dashboard = () => {
         <WeatherChart
           title="Weekly Temperature"
           description="7-week average"
-          changePercentage={5} // todo: calculate base on data
+          changePercentage={Number(
+            (
+              ((weeklyWeather[weeklyWeather.length - 1].temp -
+                weeklyWeather[0].temp) /
+                weeklyWeather[0].temp) *
+              100
+            ).toFixed(2)
+          )} // Calculate percentage change based on weeklyWeather data
           weeklyData={weeklyWeather}
         />
       )}
