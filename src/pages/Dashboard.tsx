@@ -13,6 +13,9 @@ import {
 import { fetchWeatherByLocation } from "../store/weather/weather.thunk";
 import { useCallback, useEffect } from "react";
 import Loading from "../components/loading/loading.component";
+import { selectSavedLocations } from "../store/saved-locations/saved-locations.selector";
+import { selectUserId } from "../store/auth/auth.selectors";
+import { fetchAllSavedLocations } from "../store/saved-locations/saved-locations.thunks";
 
 // Debounce
 function debounce<T extends (...args: any[]) => void>(
@@ -33,11 +36,18 @@ const Dashboard = () => {
   const metrics = useSelector(selectWeatherMetrics);
   const loading = useSelector(selectWeatherLoading);
   const error = useSelector(selectWeatherError);
+  const userId = useSelector(selectUserId);
 
   // Initial load - current location || selected location //todo: get current location of user
   useEffect(() => {
     dispatch(fetchWeatherByLocation("Santo Domingo"));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (userId !== undefined) {
+      dispatch(fetchAllSavedLocations(userId));
+    }
+  }, [dispatch, userId]);
 
   // Debounced
   const debouncedSearch = useCallback(

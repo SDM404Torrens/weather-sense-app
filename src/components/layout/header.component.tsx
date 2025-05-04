@@ -47,6 +47,7 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
   );
 
   const handleSave = () => {
+    if (savedLocations.length >= 6) return;
     dispatch(
       addSavedLocation({
         userId: userId || "",
@@ -94,7 +95,7 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
             <FaSearch className="absolute left-3 top-3 text-gray-400" />
           </div>
 
-          {location && (
+          {savedLocations.length > 0 && (
             <div className="flex items-center ml-4">
               <SaveLocationButton
                 isAuthenticated={isAuthenticated}
