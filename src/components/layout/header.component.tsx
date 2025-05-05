@@ -148,17 +148,17 @@ const Header: React.FC<HeaderProps> = ({ date, weatherData, onSearch }) => {
             </div>
           </div>
 
-          {savedLocations.length > 0 && (
-            <div className="flex items-center ml-4">
-              <SaveLocationButton
-                isAuthenticated={isAuthenticated}
-                isSaved={isSaved}
-                onSave={handleSave}
-                onRemove={handleRemove}
-                hasReachedLimit={savedLocations.length >= 6}
-              />
-            </div>
-          )}
+          {/* {savedLocations.length > 0 && ( */}
+          <div className="flex items-center ml-4">
+            <SaveLocationButton
+              isAuthenticated={isAuthenticated}
+              isSaved={isSaved}
+              onSave={handleSave}
+              onRemove={handleRemove}
+              hasReachedLimit={savedLocations.length >= 6}
+            />
+          </div>
+          {/* )} */}
 
           <TemperatureToggle />
         </div>
